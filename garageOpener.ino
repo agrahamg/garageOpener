@@ -35,8 +35,8 @@ void setup() {
   insideButton.interval(20);
 
 
-  pinMode(HALL_CLOSED, INPUT);
-  pinMode(HALL_OPEN, INPUT);
+  pinMode(HALL_CLOSED, INPUT_PULLUP);
+  pinMode(HALL_OPEN, INPUT_PULLUP);
   pinMode(RELAY, OUTPUT);
 
   //make sure it never triggers on powerup
@@ -146,11 +146,11 @@ void clearRelay(){
 }
 
 boolean doorClosed(){
-  return digitalRead(HALL_CLOSED) == HIGH;
+  return digitalRead(HALL_CLOSED) == LOW;
 }
 
 boolean doorOpen(){
-  return digitalRead(HALL_OPEN) == HIGH;
+  return digitalRead(HALL_OPEN) == LOW;
 }
 
 boolean doorMoving2() {
