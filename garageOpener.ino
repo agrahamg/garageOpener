@@ -8,9 +8,11 @@
 #define LIGHT 9
 #define INSIDE_BUTTON 10
 #define MOTION_SENSOR 15
+#define MOVEMENT_BUFFER 3000
+
 const long minute = 60000L;
-const long closeWarning = minute*.2;
-const long closeMax = minute*.4;
+const long closeWarning = minute*15;
+const long closeMax = minute*20;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(4, LIGHT);
 
@@ -39,11 +41,9 @@ void setup() {
   pinMode(HALL_OPEN, INPUT_PULLUP);
   pinMode(RELAY, OUTPUT);
 
-  //make sure it never triggers on powerup
-  digitalWrite(RELAY, HIGH);
-
   strip.begin();
   strip.show();
+  delay(MOVEMENT_BUFFER);
 }
 
 void loop() {
@@ -133,14 +133,14 @@ void updateStatusLed(){
 
 void triggerRelay(){
 
-  digitalWrite(RELAY, LOW);
+  digitalWrite(RELAY, HIGH);
   lastRelayOn = millis();
 }
 
 
 void clearRelay(){
   if ((millis() - lastRelayOn) > relayDelay) {
-    digitalWrite(RELAY, HIGH);
+    digitalWrite(RELAY, LOW);
   }
 
 }
@@ -154,5 +154,5 @@ boolean doorOpen(){
 }
 
 boolean doorMoving2() {
-  return (!doorOpen() && !doorClosed()) || lastRelayOn + 3000 > millis();
+  return (!doorOpen() && !doorClosed()) || lastRelayOn + MOVEMENT_BUFFER > millis();
 }
